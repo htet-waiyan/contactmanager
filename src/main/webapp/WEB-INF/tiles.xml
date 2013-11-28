@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	<!-- Template for login page -->
+	<definition name="home_common" template="/WEB-INF/views/template.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/template/header.jsp"></put-attribute>
+		<put-attribute name="footer" value="/WEB-INF/views/template/footer.jsp"></put-attribute>
+	</definition>
+	
+	<definition name="login" extends="home_common">
+		<put-attribute name="body" value="/WEB-INF/views/login.jsp"></put-attribute>
+	</definition>
+	
+	<definition name="register_info" extends="home_common">
+		<put-attribute name="body" value="/WEB-INF/views/register_info_body.jsp"></put-attribute>
+	</definition>
+</tiles-definitions>
