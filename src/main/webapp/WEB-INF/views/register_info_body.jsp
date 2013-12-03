@@ -15,25 +15,25 @@
 	<li>
 		<label>First Name</label>
 		<spr:input name="firstName" id="fname" path="firstName"/>
-		<spr:errors name="firstName" cssClass="error"></spr:errors>
+		<spr:errors path="firstName" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
 		<label>Last Name</label>
 		<spr:input path="lastName" id="lname" name="lastName"/>
-		<spr:errors name="lastName" cssClass="error"></spr:errors>
+		<spr:errors path="lastName" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
 		<label>Email</label>
 		<spr:input path="email" id="email" name="email"/>
-		<spr:errors name="email" cssClass="error"></spr:errors>
+		<spr:errors path="email" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
 		<label>Password</label>
 		<spr:password path="password" id="pwd" name="passwd"/>
-		<spr:errors name="password" cssClass="error"></spr:errors>
+		<spr:errors path="password" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
