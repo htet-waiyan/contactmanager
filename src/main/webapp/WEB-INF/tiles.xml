@@ -16,4 +16,8 @@
 	<definition name="register_info" extends="home_common">
 		<put-attribute name="body" value="/WEB-INF/views/register_info_body.jsp"></put-attribute>
 	</definition>
+	
+	<definition name="register_contact" extends="home_common">
+		<put-attribute name="body" value="/WEB-INF/views/register_contact_body.jsp"></put-attribute>
+	</definition>
 </tiles-definitions>

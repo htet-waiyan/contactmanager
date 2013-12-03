@@ -36,4 +36,6 @@
 		<beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView">
 		</beans:property>
 	</beans:bean>
+	
+
 </beans:beans>

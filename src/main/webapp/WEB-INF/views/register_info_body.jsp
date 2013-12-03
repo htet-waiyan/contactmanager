@@ -1,33 +1,48 @@
-<form action="register" method="post">
-<h3>Register</h3>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="spr" %>
+<script type="text/javascript">
+	$(function(){
+		$("#btnSubmit").click(function(){
+			if($('#pwd').text()!=$('#repwd').text()){
+				alert("Password didn't match");
+				return false;
+			}
+		});
+	})
+</script>
+<spr:form action="register" method="post" modelAttribute="contact">
+<h3>Registeration : Personal Information</h3>
 <ul>
 	<li>
 		<label>First Name</label>
-		<input type="text" name="firstName" id="fname"/>
+		<spr:input name="firstName" id="fname" path="firstName"/>
+		<spr:errors name="firstName" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
 		<label>Last Name</label>
-		<input type="text" name="lastName" id="lname"/>
+		<spr:input path="lastName" id="lname" name="lastName"/>
+		<spr:errors name="lastName" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
 		<label>Email</label>
-		<input type="text" name="email" id="email"/>
+		<spr:input path="email" id="email" name="email"/>
+		<spr:errors name="email" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
 		<label>Password</label>
-		<input type="text" name="password" id="passwd"/>
+		<spr:password path="password" id="pwd" name="passwd"/>
+		<spr:errors name="password" cssClass="error"></spr:errors>
 	</li>
 	
 	<li>
 		<label>Retype password</label>
-		<input type="text" name="password" id="re-passwd"/>
+		<input type="password" id="repwd" name="repassed"/>
 	</li>
 	
 	<li>
-		<input type="submit" value="Continue"/>
+		<input type="submit" id="btnSubmit" value="Continue"/>
 	</li>
 </ul>
-</form>
+</spr:form>
