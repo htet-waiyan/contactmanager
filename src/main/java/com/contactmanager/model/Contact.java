@@ -2,31 +2,26 @@ package com.contactmanager.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class Contact implements Serializable {
-	//@NotNull//(message="First Name must be filled")
-	//@NotEmpty//(message="First Name must be filled")
-	//@Max,@Min
-	//@Size(min=2, max=10)
+public class Contact{
+	
+	@Size(min=2, max=10)
 	private String firstName;
 	
-	//@NotNull//(message="Last Name must be filled")
-	//@NotEmpty//(message="Last Name must be filled")
-	//@Size(min=2,max=10)
+	@Size(min=2,max=10)
 	private String lastName;
 	
-	@NotNull//(message="Email Name must be filled")
-	@NotEmpty//(message="Email must be filled")
 	@Email(message="Invalid email")
 	private String email;
 	
-	@NotNull//(message="Password must be filled")
-	@NotEmpty//(message="Password must be filled")
+
 	@Size(min=4)
 	private String password;
 	private String address;

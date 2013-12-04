@@ -35,12 +35,6 @@
 		<spr:password path="password" id="pwd" name="passwd"/>
 		<spr:errors path="password" cssClass="error"></spr:errors>
 	</li>
-	
-	<li>
-		<label>Retype password</label>
-		<input type="password" id="repwd" name="repassed"/>
-	</li>
-	
 	<li>
 		<input type="submit" id="btnSubmit" value="Continue"/>
 	</li>

@@ -23,14 +23,39 @@ public class ContactValidator implements Validator {
 		
 		String firstName=contact.getFirstName();
 		String lastName=contact.getLastName();
+		String email=contact.getEmail();
+		String password=contact.getPassword();
 		
+		//validation for firstName
 		if(firstName==null || firstName.trim().equals("")){
 			ValidationUtils.rejectIfEmpty(error, "firstName", "NotEmpty");
-			return;
 		}
-		if(firstName.length()<2 || firstName.length()>10){
-			error.rejectValue("firstName", "Size.contact.firstName");
-			return;
+		else{
+			if(firstName.length()<2 || firstName.length()>10)
+				error.rejectValue("firstName", "Size.firstName");
+		}
+		
+		//validation for lastName
+		if(lastName==null || lastName.trim().equals("")){
+			ValidationUtils.rejectIfEmptyOrWhitespace(error, "lastName", "NotEmpty");
+		}
+		else{
+			if(lastName.length()<2 || lastName.length()>10)
+				error.rejectValue("lastName", "Size.firstName");
+		}
+		
+		//validation for email
+		if(email==null || email.trim().equals("")){
+			ValidationUtils.rejectIfEmptyOrWhitespace(error, "email", "NotEmpty");
+		}
+		
+		
+		if(password==null || password.trim().equals("")){
+			ValidationUtils.rejectIfEmptyOrWhitespace(error, "password", "NotEmpty");
+		}
+		else{
+			if(password.length()<4)
+				error.rejectValue("password", "Size.password");
 		}
 	}
 
