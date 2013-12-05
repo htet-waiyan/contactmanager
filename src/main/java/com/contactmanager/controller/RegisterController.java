@@ -19,6 +19,7 @@ import com.contactmanager.util.ContactValidator;
 
 @Controller
 @RequestMapping(value="/register")
+@SessionAttributes("contact")
 public class RegisterController {
 	
 	@Autowired

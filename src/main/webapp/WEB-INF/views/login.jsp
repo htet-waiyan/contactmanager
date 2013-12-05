@@ -61,7 +61,7 @@
 				<input type="submit" value="Login" class="form-control btn btn-success" id="btnLogin"/>
 			</div>
 			<div class="form-group">
-				<button class="form-control btn btn-primary" id="btnRegister">Create a new account</button>
+				<a href="register" class="form-control btn btn-primary" id="btnRegister">Create a new account</a>
 			</div>
 		</form>
 	</div>
@@ -69,4 +69,12 @@
 	<script type="text/javascript" src="resources/js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
 	<!-- <div class="col-md-3"></div>-->
+	
+	<script type="text/javascript">
+		var btnRegister=document.querySelector("#btnRegister");
+		
+		btnRegister.addEventListener("click",function(){
+			window.location.href="register";
+		},false);
+	</script>
 </section>

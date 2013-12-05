@@ -10,7 +10,7 @@ header{
 	margin-right:auto;
 	margin-left:auto;
 	margin-top:30px;
-	margin-bottom:10px;
+	margin-bottom:50px;
 	
 	text-align:center;
 	
@@ -28,6 +28,10 @@ header a:hover{
 }
 .error{
 	color:red;
+	font-size: 11px;
+}
+.border{
+	border-radius:5px;
 }
 /*.container{
 	width:600px;
