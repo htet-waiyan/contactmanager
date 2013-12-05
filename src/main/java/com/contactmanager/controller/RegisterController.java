@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.contactmanager.model.Contact;
+import com.contactmanager.model.PhoneNumber;
 import com.contactmanager.util.ContactValidator;
 
 @Controller
@@ -31,6 +32,11 @@ public class RegisterController {
 		return "template/register_info";
 	}
 	
+	@ModelAttribute("types")
+	public String[] getTypes(){
+		return PhoneNumber.getTypes();
+	}
+	
 	@InitBinder
 	private void initBinder(WebDataBinder binder){
 		binder.setValidator(contactValidator);
@@ -45,6 +51,19 @@ public class RegisterController {
 		System.out.println("Validation succeed");
 		System.out.println(contact);
 		return "template/register_contact";
+	}
+	
+	@RequestMapping(value="/contats", method=RequestMethod.POST)
+	public String processSecondStage(@ModelAttribute("contact") @Valid Contact contact, 
+			BindingResult result){
+		if(result.hasErrors()){
+			System.out.println("Validation failed");
+			return "template/register_contact";
+		}
+		
+		System.out.println("Validation succeed");
+		System.out.println(contact);
+		return "template/dashboard";
 	}
 	
 	@RequestMapping(value="view",method=RequestMethod.GET)

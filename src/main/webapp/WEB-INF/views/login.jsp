@@ -45,7 +45,7 @@
 	</div>
 	</div>
 	<!-- for login form -->
-	<div class="col-md-3 center-block">
+	<div class="col-md-3 center-block border" style="background:#FFFFFF;">
 		<form action='<c:url value="/login"></c:url>' method="post" role="form">
 			<h3>Login</h3>
 			<div class="form-group">

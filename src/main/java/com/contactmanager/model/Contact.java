@@ -1,6 +1,8 @@
 package com.contactmanager.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -21,7 +23,8 @@ public class Contact{
 	@Email(message="Invalid email")
 	private String email;
 	
-
+	private List<PhoneNumber> numberList=new ArrayList<>();
+	
 	@Size(min=4)
 	private String password;
 	private String address;
@@ -120,6 +123,15 @@ public class Contact{
 
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+
+	
+	public List<PhoneNumber> getNumberList() {
+		return numberList;
+	}
+
+	public void setNumberList(List<PhoneNumber> numberList) {
+		this.numberList = numberList;
 	}
 
 	@Override
