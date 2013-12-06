@@ -33,6 +33,19 @@ header a:hover{
 .border{
 	border-radius:5px;
 }
+.form{
+	background:#FFFFFF;
+}
+.center{
+	text-align:center;
+}
+.number{
+	margin-top:10px;
+	margin-right:5px;
+	font-size:12px;
+	color:#574DD8;
+	font-weight: bold;
+}
 /*.container{
 	width:600px;
 	
