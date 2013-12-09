@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.contactmanager.model.Contact;
-import com.contactmanager.model.PhoneNumber;
+import com.contactmanager.model.ContactNumber;
 import com.contactmanager.util.ContactValidator;
 
 @Controller
@@ -39,7 +39,7 @@ public class RegisterController {
 	
 	@ModelAttribute("types")
 	public String[] getTypes(){
-		return PhoneNumber.getTypes();
+		return ContactNumber.getTypes();
 	}
 	
 	@InitBinder
@@ -81,9 +81,9 @@ public class RegisterController {
 	}
 	
 	private Contact bindPhoneNumberToContact(Contact cont,String number,String type){
-		PhoneNumber ph=new PhoneNumber(type, number);
+		ContactNumber ph=new ContactNumber(type, number);
 		
-		List<PhoneNumber> phList=new ArrayList<>();
+		List<ContactNumber> phList=new ArrayList<>();
 		phList.add(ph);
 		
 		cont.setNumberList(phList);

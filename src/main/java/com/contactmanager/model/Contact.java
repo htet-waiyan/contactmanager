@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -12,8 +14,11 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Entity
+@Table(name="")
 public class Contact{
 	
+	private Integer contactID;
 	@Size(min=2, max=10)
 	private String firstName;
 	
@@ -23,7 +28,7 @@ public class Contact{
 	@Email(message="Invalid email")
 	private String email;
 	
-	private List<PhoneNumber> numberList=new ArrayList<>();
+	private List<ContactNumber> numberList=new ArrayList<>();
 	
 	@Size(min=4)
 	private String password;
@@ -126,11 +131,11 @@ public class Contact{
 	}
 
 	
-	public List<PhoneNumber> getNumberList() {
+	public List<ContactNumber> getNumberList() {
 		return numberList;
 	}
 
-	public void setNumberList(List<PhoneNumber> numberList) {
+	public void setNumberList(List<ContactNumber> numberList) {
 		this.numberList = numberList;
 	}
 

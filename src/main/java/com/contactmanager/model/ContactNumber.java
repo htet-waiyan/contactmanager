@@ -1,15 +1,15 @@
 package com.contactmanager.model;
 
-public class PhoneNumber {
+public class ContactNumber {
 	private static final String[] types={"Mobile","Home","Office"};
 	
 	private String type;
 	private String number;
 	
-	public PhoneNumber(){}
+	public ContactNumber(){}
 
 
-	public PhoneNumber(String type, String number) {
+	public ContactNumber(String type, String number) {
 		super();
 		this.type = type;
 		this.number = number;
