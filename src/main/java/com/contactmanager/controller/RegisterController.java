@@ -1,7 +1,6 @@
 package com.contactmanager.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.validation.Valid;
 
@@ -19,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.contactmanager.model.Contact;
-import com.contactmanager.model.ContactNumber;
+import com.contactmanager.model.*;
+import com.contactmanager.service.ContactService;
 import com.contactmanager.util.ContactValidator;
 
 @Controller
@@ -31,6 +30,9 @@ public class RegisterController {
 	@Autowired
 	private ContactValidator contactValidator;
 	
+	@Autowired
+	private ContactService contactService;
+	
 	@RequestMapping(method=RequestMethod.GET)
 	public String register(Model model){
 		model.addAttribute("contact", new Contact());
@@ -39,7 +41,7 @@ public class RegisterController {
 	
 	@ModelAttribute("types")
 	public String[] getTypes(){
-		return ContactNumber.getTypes();
+		return ContactType.getTypes();
 	}
 	
 	@InitBinder
@@ -76,17 +78,34 @@ public class RegisterController {
 		
 		contact=bindPhoneNumberToContact(contact, txtNumber, ddlTypes);
 		
+		Iterator<ContactNumber> numItr=contact.getContactNumberSets().iterator();
+		
+		System.out.println("Numbers.....");
+		while(numItr.hasNext()){
+			ContactNumber num=numItr.next();
+			System.out.println(num.getNumber());
+			System.out.println(num.getContactType().getDescription());
+		}
+		
+		contactService.addContact(contact);
+		
+		System.out.println("Successfully registered!");
 		System.out.println(contact);
+		
+		
 		return "redirect:/dashboard";
 	}
 	
 	private Contact bindPhoneNumberToContact(Contact cont,String number,String type){
-		ContactNumber ph=new ContactNumber(type, number);
+		ContactNumber contactNumber=new ContactNumber(number);
+		ContactType contactType=new ContactType(type);
 		
-		List<ContactNumber> phList=new ArrayList<>();
-		phList.add(ph);
+		contactNumber.setContactType(contactType);
 		
-		cont.setNumberList(phList);
+		Set<ContactNumber> phList=new HashSet<>();
+		phList.add(contactNumber);
+		
+		cont.setContactNumberSets(phList);
 		
 		return cont;
 	}

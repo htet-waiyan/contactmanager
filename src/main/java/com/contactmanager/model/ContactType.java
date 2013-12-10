@@ -1,14 +1,42 @@
 package com.contactmanager.model;
 
-public class ContactType {
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name="ContactType")
+public class ContactType implements Serializable{
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="contactTypeID")
 	private Integer serial;
+	
+	@Column(name="description")
 	private String description;
+	
+	@OneToMany(mappedBy="contactType", cascade=CascadeType.PERSIST)
+	private Set<ContactNumber> numbers=new HashSet<>();
+	
+	@Transient
+	private static final String[] types={"Mobile","Home","Office"};
 	
 	public ContactType(){}
 
-	public ContactType(Integer serial, String description) {
+	public ContactType(String description) {
 		super();
-		this.serial = serial;
 		this.description = description;
 	}
 
@@ -26,6 +54,10 @@ public class ContactType {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public static String[] getTypes() {
+		return types;
 	}
 
 	@Override

@@ -2,9 +2,19 @@ package com.contactmanager.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -15,29 +25,51 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="")
-public class Contact{
-	
+@Table(name="Contact")
+public class Contact implements Serializable{
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="contactID")
 	private Integer contactID;
+	
+	@Column(name="firstName")
 	@Size(min=2, max=10)
 	private String firstName;
 	
+	@Column(name="lastName")
 	@Size(min=2,max=10)
 	private String lastName;
 	
+	@Column(name="email")
 	@Email(message="Invalid email")
 	private String email;
-	
-	private List<ContactNumber> numberList=new ArrayList<>();
-	
+
+	@Column(name="password")
 	@Size(min=4)
 	private String password;
+	
+	@Column(name="address")
 	private String address;
 	
+	@Column(name="website")
 	private String website;
+	
+	@Column(name="twitter")
 	private String twitter;
+	
+	@Column(name="facebook")
 	private String facebook;
+	
+	@Column(name="thumbnail")
 	private String thumbnail;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(
+			name="ContactNumberDetail",
+			joinColumns={@JoinColumn(name="contactID")},
+			inverseJoinColumns={@JoinColumn(name="contactNumberID")}
+	)
+	private Set<ContactNumber> contactNumberSets=new HashSet<>();
 	
 	public Contact(){}
 
@@ -130,13 +162,20 @@ public class Contact{
 		this.thumbnail = thumbnail;
 	}
 
-	
-	public List<ContactNumber> getNumberList() {
-		return numberList;
+	public Integer getContactID() {
+		return contactID;
 	}
 
-	public void setNumberList(List<ContactNumber> numberList) {
-		this.numberList = numberList;
+	public void setContactID(Integer contactID) {
+		this.contactID = contactID;
+	}
+
+	public Set<ContactNumber> getContactNumberSets() {
+		return contactNumberSets;
+	}
+
+	public void setContactNumberSets(Set<ContactNumber> contactNumberSets) {
+		this.contactNumberSets = contactNumberSets;
 	}
 
 	@Override
