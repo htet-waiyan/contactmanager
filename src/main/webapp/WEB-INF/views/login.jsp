@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="spr" %>
 <section class="row">
 	<!-- <div class="col-md-3"></div>-->
 	
@@ -46,14 +47,16 @@
 	</div>
 	<!-- for login form -->
 	<div class="col-md-3 center-block border" style="background:#FFFFFF;">
-		<form action='<c:url value="/login"></c:url>' method="post" role="form">
+		<spr:form action="login" method="post" role="form" modelAttribute="error">
 			<h3>Login</h3>
 			<div class="form-group">
 				<label>Email</label>
+				<span class="error">${error}</span>
 				<input type="email" class="form-control" name="txtEmail" id="email"/>
 			</div>
 			<div class="form-group">
 				<label>Password</label>
+				<span class="error">${error}</span>
 				<input type="password" class="form-control" name="txtPasswd" id="passed"/>
 			</div>
 			<div class="form-group">
@@ -63,7 +66,7 @@
 			<div class="form-group">
 				<a href="register" class="form-control btn btn-primary" id="btnRegister">Create a new account</a>
 			</div>
-		</form>
+		</spr:form>
 	</div>
 	
 	<script type="text/javascript" src="resources/js/jquery-1.10.2.min.js"></script>

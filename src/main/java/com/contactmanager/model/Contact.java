@@ -15,6 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -26,6 +30,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="Contact")
+@NamedQueries(
+		@NamedQuery(name="Contact.SelectForLogin",
+		query="SELECT new Contact(email,password) from Contact")
+)
 public class Contact implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -73,6 +81,12 @@ public class Contact implements Serializable{
 	
 	public Contact(){}
 
+	//this constructor is mainly for quering only email and password 
+	//for login validation.
+	public Contact(String email,String password){
+		this.email=email;
+		this.password=password;
+	}
 	public Contact(String firstName, String lastName, String email,
 			String password, String address, String website, String twitter,
 			String facebook, String thumbnail) {

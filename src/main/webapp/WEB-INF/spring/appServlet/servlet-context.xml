@@ -29,6 +29,7 @@
 	
 	<context:component-scan base-package="com.contactmanager.controller" />
 	<context:component-scan base-package="com.contactmanager.util"></context:component-scan>
+	<context:component-scan base-package="com.contactmanager.util.login"></context:component-scan>
 	<context:component-scan base-package="com.contactmanager.dao"></context:component-scan>
 	<context:component-scan base-package="com.contactmanager.service"></context:component-scan>
 	
@@ -68,6 +69,7 @@
         	<beans:props>
         		<beans:prop key="hibernate.dialect">${jdbc.dialect}</beans:prop>
         		<beans:prop key="hibernate.show_sql">true</beans:prop>
+        		<beans:prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</beans:prop>
         	</beans:props>
         </beans:property>
     </beans:bean>
