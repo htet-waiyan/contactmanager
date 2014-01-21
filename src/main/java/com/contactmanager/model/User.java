@@ -59,13 +59,9 @@ public class User {
 	)
 	private List<Contact> contactList=new ArrayList<>();
 	
-	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(
-			name="UserRole",
-			joinColumns={@JoinColumn(name="userID")},
-			inverseJoinColumns={@JoinColumn(name="roleID")}
-	)
-	private Set<Role> roleSet=new HashSet<>();
+	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinColumn(name="roleID")
+	private Role role;
 	
 	public User() {
 		// TODO Auto-generated constructor stub
@@ -134,6 +130,14 @@ public class User {
 
 	public void setContactList(List<Contact> contactList) {
 		this.contactList = contactList;
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	@Override
