@@ -9,6 +9,9 @@
         <mapping class="com.contactmanager.model.ContactNumber" />
         <mapping class="com.contactmanager.model.ContactType" />
         <mapping class="com.contactmanager.model.Group" />
+        <mapping class="com.contactmanager.model.Profile"/>
+        <mapping class="com.contactmanager.model.User"/>
+        <mapping class="com.contactmanager.model.Role"/>
     </session-factory>
          
 </hibernate-configuration>

@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+html,body{
+	margin:0;
+	padding:0;
+}
+.nav-bg{
+	background:#447BD4;
+}
+.logo{
+	color:#14181E;
+}
+.separator{
+	border-bottom: 2px solid #66a75;
+	margin-bottom: 15px;
+}
+.textbox-size{
+	width:120px;
+}

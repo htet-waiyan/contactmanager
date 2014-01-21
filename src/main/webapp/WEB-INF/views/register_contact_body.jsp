@@ -3,7 +3,7 @@
 <section class="row">
 	<div class="col-md-8 col-md-offset-2 form border">
 	<h4 class="center">Register : Contacts</h4>
-	<spr:form  role="form" action="register/contacts" id="f1" modelAttribute="contact">
+	<form method="post" role="form" action="register/contacts" id="f1">
 		<div class="col-md-6">	
 			<div class="form-group first">
 				<label>Phone</label>
@@ -52,7 +52,7 @@
 				<button id="btnSave" class="btn btn-primary btn-large">Save</button>
 			</div>
 		</div>
-		</spr:form>
+		</form>
 	</div>
 </section>
 <script type="text/javascript" src="resources/js/jquery-1.10.2.min.js"></script>

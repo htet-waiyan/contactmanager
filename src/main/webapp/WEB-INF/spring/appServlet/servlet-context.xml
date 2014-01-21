@@ -32,6 +32,7 @@
 	<context:component-scan base-package="com.contactmanager.util.login"></context:component-scan>
 	<context:component-scan base-package="com.contactmanager.dao"></context:component-scan>
 	<context:component-scan base-package="com.contactmanager.service"></context:component-scan>
+	<context:component-scan base-package="com.contactmanager.model"></context:component-scan>
 	
 	
 	<beans:bean id="tileConfiguer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
@@ -57,7 +58,7 @@
 	
 	<!-- To configure to use a datasource with the jdbc information -->
 	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-	p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.databaseurl}" p:username="${jdbc.username}"></beans:bean>
+	p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.databaseurl}" p:username="${jdbc.username}" p:password="${jdbc.password}"></beans:bean>
 	
 	<!-- configuration for Hibernate SessionFactory -->
 	<beans:bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

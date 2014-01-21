@@ -20,4 +20,15 @@
 	<definition name="register_contact" extends="home_common">
 		<put-attribute name="body" value="/WEB-INF/views/register_contact_body.jsp"></put-attribute>
 	</definition>
+	
+	<!-- Template for dashboard -->
+	<definition name="dashboard_common" template="/WEB-INF/views/template/contactTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/template/profile_header.jsp"></put-attribute>
+	</definition>
+	<definition name="contactList" extends="dashboard_common">
+		<put-attribute name="body" value="/WEB-INF/views/contacts_body.jsp"></put-attribute>
+	</definition>
+	<definition name="contactAdd" extends="dashboard_common">
+		<put-attribute name="body" value="/WEB-INF/views/contacts_add_body.jsp"></put-attribute>
+	</definition>
 </tiles-definitions>

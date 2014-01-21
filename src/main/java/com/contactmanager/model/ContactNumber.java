@@ -7,32 +7,40 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
 @Table(name="ContactNumber")
-public class ContactNumber implements Serializable{
+public class ContactNumber implements Serializable,Comparable<ContactNumber>{
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="contactNumberID")
 	private Integer key;
 	
 	@Column(name="number")
 	private String number;
 	
-	@ManyToMany(mappedBy="contactNumberSets")
-	private List<Contact> contactOwnerList=new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name="contactID")
+	private Contact contact;
 	
-	@ManyToOne(cascade=CascadeType.ALL, optional=true)
-	@JoinColumn(name="contactTypeID", nullable=true)
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="profileID")
+	private Profile profile;
+	
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="contactTypeID")
 	private ContactType contactType;
 	
 	public ContactNumber(){}
@@ -59,6 +67,24 @@ public class ContactNumber implements Serializable{
 		this.key = key;
 	}
 
+	
+
+	public Contact getContact() {
+		return contact;
+	}
+
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
+
+	public Profile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+
 	public ContactType getContactType() {
 		return contactType;
 	}
@@ -67,23 +93,10 @@ public class ContactNumber implements Serializable{
 		this.contactType = contactType;
 	}
 
-	public List<Contact> getContactOwnerList() {
-		return contactOwnerList;
-	}
-
-	public void setContactOwnerList(List<Contact> contactOwnerList) {
-		this.contactOwnerList = contactOwnerList;
-	}
-	
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((contactOwnerList == null) ? 0 : contactOwnerList.hashCode());
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result + ((number == null) ? 0 : number.hashCode());
 		return result;
@@ -98,11 +111,6 @@ public class ContactNumber implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		ContactNumber other = (ContactNumber) obj;
-		if (contactOwnerList == null) {
-			if (other.contactOwnerList != null)
-				return false;
-		} else if (!contactOwnerList.equals(other.contactOwnerList))
-			return false;
 		if (key == null) {
 			if (other.key != null)
 				return false;
@@ -118,7 +126,13 @@ public class ContactNumber implements Serializable{
 
 	@Override
 	public String toString() {
-		return "PhoneNumber [number=" + number + "]";
-	}	
+		return "ContactNumber [key=" + key + ", number=" + number + "]";
+	}
+
+	@Override
+	public int compareTo(ContactNumber num) {
+		// TODO Auto-generated method stub
+		return this.number.compareTo(num.getNumber());
+	}
 
 }

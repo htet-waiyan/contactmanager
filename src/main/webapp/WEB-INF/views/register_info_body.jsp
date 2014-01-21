@@ -1,7 +1,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="spr" %>
 <section class="row">
 	<div class="col-md-3 border" style="background:#FFFFFF; margin-left:440px;">
-		<spr:form action="register" method="post" modelAttribute="contact">
+		<spr:form action="register" method="post" modelAttribute="user">
 			<h4>Register : Personal Info</h4>
 			<div class="form-group">
 				<label>First Name</label><br/>

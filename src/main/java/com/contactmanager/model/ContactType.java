@@ -7,9 +7,12 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -17,6 +20,9 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="ContactType")
+@NamedQueries({
+	@NamedQuery(name="ContactType.GetExistingType",query="FROM ContactType ct WHERE ct.description=:desc")
+})
 public class ContactType implements Serializable{
 	
 	@Id
@@ -24,10 +30,10 @@ public class ContactType implements Serializable{
 	@Column(name="contactTypeID")
 	private Integer serial;
 	
-	@Column(name="description")
+	@Column(name="Description")
 	private String description;
 	
-	@OneToMany(mappedBy="contactType", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="contactType", cascade=CascadeType.PERSIST,fetch=FetchType.EAGER)
 	private Set<ContactNumber> numbers=new HashSet<>();
 	
 	@Transient
@@ -99,4 +105,5 @@ public class ContactType implements Serializable{
 	}
 	
 	
+
 }

@@ -2,6 +2,7 @@ package com.contactmanager.controller;
 
 import java.util.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +21,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.contactmanager.model.*;
 import com.contactmanager.service.ContactService;
+import com.contactmanager.service.ProfileService;
 import com.contactmanager.util.ContactValidator;
 
 @Controller
 @RequestMapping(value="/register")
-@SessionAttributes("contact")
+@SessionAttributes("user")
 public class RegisterController {
 	
 	@Autowired
 	private ContactValidator contactValidator;
 	
 	@Autowired
-	private ContactService contactService;
+	private ProfileService profileService;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public String register(Model model){
-		model.addAttribute("contact", new Contact());
+		model.addAttribute("user", new User());
 		return "template/register_info";
 	}
 	
@@ -50,35 +52,35 @@ public class RegisterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public String processFirstStage(@ModelAttribute("contact") @Valid Contact contact,BindingResult result){
+	public String processFirstStage(@ModelAttribute("user") @Valid User user,BindingResult result){
 		if(result.hasErrors()){
 			System.out.println("Validation Failed");
 			return "template/register_info";
 		}
 		System.out.println("Validation succeed");
-		System.out.println(contact);
+		System.out.println(user);
 		return "template/register_contact";
 	}
 	
 	@RequestMapping(value="/contacts", method=RequestMethod.POST)
-	public String processSecondStage(@ModelAttribute("contact") Contact contact, String txtNumber, String ddlTypes, String txtFB,
+	public String processSecondStage(String txtNumber, String ddlTypes, String txtFB,
 			String txtTwitter, String txtWeb,
-			String addrArea,BindingResult result, RedirectAttributes ra){
-		if(result.hasErrors()){
-			System.out.println("Validation failed");
-			return "template/register_contact";
-		}
+			String addrArea,HttpSession session,RedirectAttributes ra){
 		
+		Profile profile=new Profile();
+		User user=(User)session.getAttribute("user");
 		System.out.println("Validation succeed");
 		System.out.println(txtNumber+"-"+ddlTypes+"-"+txtFB+"-"+txtTwitter+"-"+txtWeb+"-"+addrArea);
-		contact.setFacebook(txtFB);
-		contact.setTwitter(txtTwitter);
-		contact.setWebsite(txtWeb);
-		contact.setAddress(addrArea);
+		profile.setFacebook(txtFB);
+		profile.setTwitter(txtTwitter);
+		profile.setWebsite(txtWeb);
 		
-		contact=bindPhoneNumberToContact(contact, txtNumber, ddlTypes);
+		profile=bindPhoneNumberToContact(profile, txtNumber, ddlTypes);
+		user.setUserProfile(profile);
+		System.out.println(user);
+		System.out.println(profile);
 		
-		Iterator<ContactNumber> numItr=contact.getContactNumberSets().iterator();
+		Iterator<ContactNumber> numItr=profile.getContactNumList().iterator();
 		
 		System.out.println("Numbers.....");
 		while(numItr.hasNext()){
@@ -87,16 +89,16 @@ public class RegisterController {
 			System.out.println(num.getContactType().getDescription());
 		}
 		
-		contactService.addContact(contact);
+		profileService.addUser(user);
 		
 		System.out.println("Successfully registered!");
-		System.out.println(contact);
+		System.out.println(profile);
 		
 		
 		return "redirect:/dashboard";
 	}
 	
-	private Contact bindPhoneNumberToContact(Contact cont,String number,String type){
+	private Profile bindPhoneNumberToContact(Profile profile,String number,String type){
 		ContactNumber contactNumber=new ContactNumber(number);
 		ContactType contactType=new ContactType(type);
 		
@@ -105,9 +107,9 @@ public class RegisterController {
 		Set<ContactNumber> phList=new HashSet<>();
 		phList.add(contactNumber);
 		
-		cont.setContactNumberSets(phList);
+		profile.setContactNumList(phList);
 		
-		return cont;
+		return profile;
 	}
 	@RequestMapping(value="view",method=RequestMethod.GET)
 	public String viewSession(){

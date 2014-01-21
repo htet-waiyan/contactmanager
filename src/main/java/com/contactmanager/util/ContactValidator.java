@@ -6,6 +6,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.contactmanager.model.Contact;
+import com.contactmanager.model.User;
 
 @Component
 public class ContactValidator implements Validator {
@@ -13,18 +14,18 @@ public class ContactValidator implements Validator {
 	@Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
-		return Contact.class.isAssignableFrom(clazz);
+		return User.class.isAssignableFrom(clazz);
 	}
 
 	@Override
 	public void validate(Object arg0, Errors error) {
 		// TODO Auto-generated method stub
-		Contact contact=(Contact)arg0;
+		User user=(User)arg0;
 		
-		String firstName=contact.getFirstName();
-		String lastName=contact.getLastName();
-		String email=contact.getEmail();
-		String password=contact.getPassword();
+		String firstName=user.getFirstName();
+		String lastName=user.getLastName();
+		String email=user.getEmail();
+		String password=user.getPassword();
 		
 		//validation for firstName
 		if(firstName==null || firstName.trim().equals("")){

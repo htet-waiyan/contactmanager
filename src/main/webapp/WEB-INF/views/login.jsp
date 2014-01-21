@@ -47,16 +47,16 @@
 	</div>
 	<!-- for login form -->
 	<div class="col-md-3 center-block border" style="background:#FFFFFF;">
-		<spr:form action="login" method="post" role="form" modelAttribute="error">
+		<spr:form action="j_spring_security_check" method="post" role="form">
 			<h3>Login</h3>
 			<div class="form-group">
 				<label>Email</label>
-				<span class="error">${error}</span>
+				<span class="error">${email_error}</span>
 				<input type="email" class="form-control" name="txtEmail" id="email"/>
 			</div>
 			<div class="form-group">
 				<label>Password</label>
-				<span class="error">${error}</span>
+				<span class="error">${passwd_error}</span>
 				<input type="password" class="form-control" name="txtPasswd" id="passed"/>
 			</div>
 			<div class="form-group">

@@ -1,11 +1,48 @@
 package com.contactmanager.model;
 
-public class Group {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name="ContactGroup")
+@NamedQueries({
+	@NamedQuery(name="Group.GetExistingGroupName", query="FROM Group g where g.description=:desc")
+})
+public class Group implements Serializable{
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="groupID")
 	private Integer groupId;
+	
+	@Column(name="contactDesc")
 	private String description;
+	
+	@Transient
+	private static final String[] groupNames={"Others","Family","Favorite","Friend","Colleague"};
+	
+	@OneToMany(mappedBy="group", fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	private List<Contact> contactList=new ArrayList<>();
 	
 	public Group(){}
 
+	public Group(String desc){
+		this.description=desc;
+	}
 	public Group(Integer groupId, String description) {
 		super();
 		this.groupId = groupId;
@@ -26,6 +63,10 @@ public class Group {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public static String[] getGroupnames() {
+		return groupNames;
 	}
 
 	@Override
@@ -58,11 +99,5 @@ public class Group {
 		} else if (!groupId.equals(other.groupId))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Group [groupId=" + groupId + ", description=" + description
-				+ "]";
 	}
 }
