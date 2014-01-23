@@ -47,17 +47,22 @@
 	</div>
 	<!-- for login form -->
 	<div class="col-md-3 center-block border" style="background:#FFFFFF;">
-		<spr:form action="j_spring_security_check" method="post" role="form">
+		<spr:form action="login" method="post" role="form">
 			<h3>Login</h3>
+			<div class="form-group">
+				<c:if test="${param.login_error==1}">
+					<div style="color:red">Invalid username or password</div>
+				</c:if>
+			</div>
 			<div class="form-group">
 				<label>Email</label>
 				<span class="error">${email_error}</span>
-				<input type="email" class="form-control" name="txtEmail" id="email"/>
+				<input type="email" class="form-control" name="j_username" id="email"/>
 			</div>
 			<div class="form-group">
 				<label>Password</label>
 				<span class="error">${passwd_error}</span>
-				<input type="password" class="form-control" name="txtPasswd" id="passed"/>
+				<input type="password" class="form-control" name="j_password" id="passed"/>
 			</div>
 			<div class="form-group">
 				<a href="" style="margin-bottom:12px;display:inline-block;">Forget Password?</a>

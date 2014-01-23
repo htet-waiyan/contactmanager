@@ -42,6 +42,11 @@ public class HomeController {
 		return "template/home";
 	}
 	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public String testForSecurity(){
+		return "test.jsp";
+	}
+	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String login(@RequestParam String txtEmail,@RequestParam String txtPasswd,HttpSession session)
 	throws LoginFailedException,NonRegisterEmailException, PasswordInvalidException{

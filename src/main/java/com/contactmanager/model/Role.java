@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -25,7 +26,7 @@ public class Role {
 	@Column(name="roleName")
 	private String roleName;
 	
-	@OneToOne(mappedBy="role",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="role",fetch=FetchType.EAGER,cascade=CascadeType.ALL)
 	private List<User> userList=new ArrayList<>();
 	
 	public Role() {

@@ -87,9 +87,13 @@ public class ProfileDAOImpl implements ProfileDAO {
 		Query query=session.getNamedQuery("User.RetrieveByEmail");
 		query.setParameter("email", email);
 		
+		System.out.println("Getting User By Email");
 		User user=null;
-		if(query.list().size()>0)
+		if(query.list().size()>0){
 			user=(User)query.list().get(0);
+			
+			System.out.println(user.getEmail()+" "+user.getPassword());
+		}
 		
 		return user;
 	}
