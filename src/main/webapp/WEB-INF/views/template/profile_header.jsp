@@ -7,7 +7,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand logo" href='<c:url value="/"></c:url>'>Contact Manager</a>
+    <a class="navbar-brand logo" href='/'>Contact Manager</a>
 </div>
 <div class="collapse navbar-collapse" id="menu-collapse">
 <ul class="nav navbar-nav nav navbar-right">
@@ -35,7 +35,7 @@
 	</div>
 </form>
 
-<form action="../contacts/search" class="navbar-form navbar-left">
+<form action="../contacts/search" class="navbar-form navbar-left" method="get">
 	<div class="form-group">
 		<input type="text" class="form-control" name="txtSearch" placeholder="search" id="search"/>
 	</div>

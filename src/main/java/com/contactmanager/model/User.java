@@ -1,5 +1,6 @@
 package com.contactmanager.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,12 +27,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name="User")
 @NamedQueries({
-	@NamedQuery(name="User.RetrieveByEmail",query="SELECT new User(userID,email,password) FROM User u where u.email=:email"),
+	@NamedQuery(name="User.RetrieveByEmail",query="FROM User u where u.email=:email"),
 	@NamedQuery(name="User.RetrieveContacts",
 	query="SELECT c FROM User u INNER JOIN u.contactList c WHERE u.userID=:userID AND c.isDeleted=:deleted")
 })
 //SELECT c FROM User u INNER JOIN u.contactList c INNER JOIN c.contactNumberSets cs INNER JOIN cs.contactType ct WHERE u.userID=:userID
-public class User {
+public class User implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="userID")

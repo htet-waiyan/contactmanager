@@ -92,7 +92,7 @@ public class ProfileDAOImpl implements ProfileDAO {
 		if(query.list().size()>0){
 			user=(User)query.list().get(0);
 			
-			System.out.println(user.getEmail()+" "+user.getPassword());
+			System.out.println(user.getEmail()+" "+user.getPassword()+" "+user.getRole().getRoleName());
 		}
 		
 		return user;

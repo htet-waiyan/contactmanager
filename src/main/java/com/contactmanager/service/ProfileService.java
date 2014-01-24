@@ -11,4 +11,6 @@ public interface ProfileService {
 	public List<Contact> addContactsTo(Contact contact,Integer id);
 	
 	public List<Contact> updateContact(Contact contact,Integer id);
+	
+	public User getUser(String email);
 }

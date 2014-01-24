@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -24,6 +25,7 @@ import com.contactmanager.model.Contact;
 import com.contactmanager.model.ContactNumber;
 import com.contactmanager.model.ContactType;
 import com.contactmanager.model.Group;
+import com.contactmanager.model.User;
 import com.contactmanager.service.ContactService;
 import com.contactmanager.service.ProfileService;
 
@@ -46,8 +48,7 @@ public class ContactsController {
 	public String[] getContactTypes(){
 		return ContactType.getTypes();
 	}
-	private List<Contact> retrieveAllContacts(HttpSession session){
-		int userID=(int)session.getAttribute("userID");
+	private List<Contact> retrieveAllContacts(Integer userID){
 		System.out.println("User ID :"+userID);
 		
 		List<Contact> contactList= profileService.getAllContactsOf(userID);
@@ -103,10 +104,16 @@ public class ContactsController {
 		
 	}
 	
+	private Integer getUserIDFromSession(){
+		Integer userID=(Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		return userID;
+	}
+	
 	@RequestMapping(value="/all",method=RequestMethod.GET)
 	public String listContacts(ModelMap map,HttpSession session){
 		System.out.println("Handling /all");
-		map.addAttribute("contactList", retrieveAllContacts(session));
+		map.addAttribute("contactList", retrieveAllContacts(getUserIDFromSession()));
 		return "template/contacts_list";
 	}
 	
@@ -153,9 +160,9 @@ public class ContactsController {
 	
 	@RequestMapping(value="/search", method=RequestMethod.GET)
 	public String searchContact(String txtSearch, ModelMap map,HttpSession session){
-		int id=(int)session.getAttribute("userID");
+		int id=getUserIDFromSession();
 		
-		System.out.println("Search Query : "+txtSearch);
+		System.out.println("Search Query : "+txtSearch+" "+id);
 		if(txtSearch!=null)
 			txtSearch=txtSearch.trim();
 		
@@ -190,7 +197,7 @@ public class ContactsController {
 	@RequestMapping(value="list", method=RequestMethod.GET)
 	public String listContactsBy(ModelMap map,String listby,HttpSession session){
 		System.out.println("List contacts by "+listby);
-		int id=(int)session.getAttribute("userID");
+		int id=getUserIDFromSession();
 		map.addAttribute("contactList", contactService.getContactsUnder(listby,id ));
 		
 		for(Contact c:contactService.getContactsUnder(listby, id)){

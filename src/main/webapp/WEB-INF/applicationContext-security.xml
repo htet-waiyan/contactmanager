@@ -2,22 +2,32 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-http://www.springframework.org/schema/security
-http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<import resource="spring/appServlet/servlet-context.xml"/>
+	
 	<security:http auto-config="false" use-expressions="true">
 		<security:intercept-url pattern="/contacts/**"  access="hasRole('ROLE_USER')" />
-		
+		<security:form-login login-page="/" authentication-failure-url="/?login_error=1" default-target-url="/contacts/all"/>
 		<security:logout logout-success-url="/"/>
 	</security:http>
-	<security:authentication-manager alias="authenticationManager">
-        <security:authentication-provider ref="authenticationProvider" />
+	<security:authentication-manager>
+        <security:authentication-provider ref="customUserAuthenticationProvider" />
     </security:authentication-manager>
     
-    <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="customUserDetailsService" />
+    <bean id="customUserAuthenticationProvider" class="com.contactmanager.service.CustomUserAuthenticationProvider">
+    	<!-- <property name="profileService" ref="profileService"></property>-->
     </bean>
-	
-	<bean id="customUserDetailsService" class="com.contactmanager.util.CustomUserDetailService"></bean>
+    
+    
+    <!--<bean id="profileService" class="com.contactmanager.service.ProfileSerivceImpl"></bean>-->
+    
+    <!--<context:annotation-config></context:annotation-config>
+    <context:component-scan base-package="com.contactmanager"></context:component-scan>-->
 </beans>

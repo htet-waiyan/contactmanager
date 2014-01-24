@@ -37,7 +37,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 	@NamedQuery(name="ListContactsBy", query="SELECT c From User u INNER JOIN u.contactList c "
 			+ "WHERE u.userID=:userID AND c.group.description=:desc AND c.isDeleted=:deleted"),
 	@NamedQuery(name="Contact.SearchContacts", query="SELECT c From User u INNER JOIN u.contactList c "
-			+ "WHERE u.userID=:userID AND lower(c.firstName)=lower(:fName) OR lower(c.lastName)=lower(:lName)")
+			+ "WHERE u.userID=:userID AND (lower(c.firstName)=lower(:fName) OR lower(c.lastName)=lower(:lName))")
 })
 public class Contact implements Serializable{
 	@Id

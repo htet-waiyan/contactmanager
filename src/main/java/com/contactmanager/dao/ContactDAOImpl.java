@@ -51,8 +51,8 @@ public class ContactDAOImpl implements ContactDAO {
 		Session session=sessionFactory.getCurrentSession();
 		Query dbQuery=session.getNamedQuery("Contact.SearchContacts");
 		dbQuery.setParameter("userID", userID);
-		dbQuery.setParameter("fName", "%"+query+"%");
-		dbQuery.setParameter("lName", "%"+query+"%");
+		dbQuery.setParameter("fName", query);
+		dbQuery.setParameter("lName", query);
 		
 		return dbQuery.list();
 	}

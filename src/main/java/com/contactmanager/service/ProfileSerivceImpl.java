@@ -57,4 +57,11 @@ public class ProfileSerivceImpl implements ProfileService {
 		return profileDAO.editContact(contact, id).getContactList();
 	}
 
+	@Override
+	@Transactional
+	public User getUser(String email) {
+		// TODO Auto-generated method stub
+		return profileDAO.getUserByEmail(email.trim());
+	}
+
 }
