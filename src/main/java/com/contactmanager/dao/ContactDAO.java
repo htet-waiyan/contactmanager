@@ -1,8 +1,11 @@
 package com.contactmanager.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.contactmanager.model.Contact;
+import com.contactmanager.model.ContactNumber;
+import com.contactmanager.model.User;
 
 public interface ContactDAO {
 	//to add contact info during registration/edition
@@ -21,4 +24,6 @@ public interface ContactDAO {
 	public Contact getContactDetailByID(Integer id);
 	
 	public void moveContactsTo(String[] contIDs,String moveTo);
+	
+	public User editContact(Contact contact,Integer userID);
 }

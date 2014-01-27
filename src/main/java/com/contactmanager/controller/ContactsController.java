@@ -125,25 +125,27 @@ public class ContactsController {
 	}
 	
 	@RequestMapping(value="/add",method=RequestMethod.POST)
-	public String saveAddingContact(@ModelAttribute("contact") Contact contact, HttpServletRequest request, HttpSession session){
+	public String saveAddingContact(@ModelAttribute("contact") Contact contact, HttpServletRequest request, HttpSession session,RedirectAttributes ra){
 		System.out.println("Saving or updating contact "+contact.getContactID());
 		
 		
 		List<Contact> contList=null;
-		int userID=(int)session.getAttribute("userID");
+		int userID=getUserIDFromSession();
+		
+		contact.setContactNumberSets(addNumbersFrom(contact,request.getParameterValues("number"), request.getParameterValues("type")));
 		
 		String param=request.getParameter("param").trim();
 		
 		System.out.println("Action Param : "+param);
 		
+		//if adding new contacts
 		if(param.equals("add")){
-			contact.setContactNumberSets(addNumbersFrom(contact,request.getParameterValues("number"), request.getParameterValues("type")));
 			contList=profileService.addContactsTo(contact, userID);
 		}
-			
+		
+		//if editing existing contacts
 		else{
-			editNumbersFrom(contact,request.getParameterValues("number"), request.getParameterValues("type"));
-			contList=profileService.updateContact(contact, userID);
+			contList=contactService.editContact(contact, userID);
 		}
 		
 		for(Contact c : contList){

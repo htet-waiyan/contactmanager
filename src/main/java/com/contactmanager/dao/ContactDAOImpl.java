@@ -2,7 +2,9 @@ package com.contactmanager.dao;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,8 +13,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.contactmanager.model.Contact;
+import com.contactmanager.model.ContactNumber;
 import com.contactmanager.model.ContactType;
 import com.contactmanager.model.Group;
+import com.contactmanager.model.User;
 
 @Repository
 public class ContactDAOImpl implements ContactDAO {
@@ -78,7 +82,9 @@ public class ContactDAOImpl implements ContactDAO {
 		// TODO Auto-generated method stub
 		Session session=sessionFactory.getCurrentSession();
 		
-		return (Contact)session.get(Contact.class, id);
+		Contact contact=(Contact)session.get(Contact.class, id);
+		session.flush();
+		return contact;
 	}
 
 	@Override
@@ -100,6 +106,49 @@ public class ContactDAOImpl implements ContactDAO {
 			
 			session.saveOrUpdate(cont);
 		}
+	}
+
+	@Override
+	public User editContact(Contact contact,Integer userID) {
+		// TODO Auto-generated method stub
+		Session session=sessionFactory.getCurrentSession();
+		
+		Query query=session.getNamedQuery("Contact.DeleteAllNumbers");
+		query.setParameter("id", contact.getContactID());
+		
+		query.executeUpdate();
+		
+		System.out.println(session.contains(contact));
+		
+		System.out.println("Resetting Numbers");
+		
+		query=session.getNamedQuery("Group.GetExistingGroupName");
+		query.setParameter("desc", contact.getGroup().getDescription());
+		
+		//if the group is already existed. then re-assign the group id
+		if(query.list().size()>0){
+			Group group=(Group)query.list().get(0);
+			contact.setGroup(group);
+		}
+		
+		/*for(ContactNumber number:contact.getContactNumberSets()){
+			query=session.getNamedQuery("ContactType.GetExistingType");
+			query.setParameter("desc", number.getContactType().getDescription());
+			
+			//if the type is already existed. then re-assign the type id
+			System.out.println("Editing Numbers : "+number.getKey()+" "+number.getNumber());
+			
+			if(query.list().size()>0){
+				ContactType type=(ContactType) query.list().get(0);
+				number.setContactType(type);
+			}
+		}*/
+		session.saveOrUpdate(contact);
+		
+		User user=(User) session.get(User.class, userID);
+		Hibernate.initialize(user.getContactList());
+		
+		return user;
 	}
 	
 	

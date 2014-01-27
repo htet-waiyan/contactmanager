@@ -2,6 +2,7 @@ package com.contactmanager.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.contactmanager.dao.ContactDAO;
 import com.contactmanager.model.Contact;
 import com.contactmanager.model.ContactNumber;
+import com.contactmanager.model.User;
 import com.contactmanager.util.ContactFirstNameComparator;
 
 @Service
@@ -66,5 +68,16 @@ public class ContactServiceImpl implements ContactService {
 		// TODO Auto-generated method stub
 		contactDAO.moveContactsTo(ids, moveTo);
 	}
+
+	@Override
+	@Transactional
+	public List<Contact> editContact(Contact contact, Integer userID) {
+		// TODO Auto-generated method stub
+		User user=contactDAO.editContact(contact, userID);
+		
+		return user.getContactList();
+	}
+
+	
 
 }
