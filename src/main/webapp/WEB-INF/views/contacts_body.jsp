@@ -4,7 +4,9 @@
 <div style="margin-top: 60px;"></div>
 <!-- Action bar -->
 <div class="row">
-	<div class="col-md-1"></div>
+	<div class="col-md-1">
+		
+	</div>
 	<div class="col-md-3">
 		<!-- col-md-2 col-xs-6  -->
 		<div class="btn-group">
@@ -46,10 +48,10 @@
 			</button>
 			<ul class="dropdown-menu" role="menu">
 				<li><a href="../contacts/all">All</a></li>
-				<li><a href="../contacts/list?listby=Colleague">Colleague</a></li>
-				<li><a href="../contacts/list?listby=Family">Family</a></li>
-				<li><a href="../contacts/list?listby=Favorite">Favorite</a></li>
-				<li><a href="../contacts/list?listby=Friend">Friend</a></li>
+				<li><a href="../contacts/Colleague">Colleague</a></li>
+				<li><a href="../contacts/Family">Family</a></li>
+				<li><a href="../contacts/Favorite">Favorite</a></li>
+				<li><a href="../contacts/Friend">Friend</a></li>
 			</ul>
 		</div>
 	</div>
@@ -60,15 +62,17 @@
 <input type="hidden" class="to" name="toGroup"/>
 <c:forEach items="${contactList}" var="contact">
 	<!-- 6 columns -->
-	<div class="row" id="contacts">
+	<div class="row row-gap" id="contacts">
 		<div class="col-md-1">
 			
 		</div>
-		<div class="col-md-1">
+		
+		<div class="col-md-1 ver-align">
 			<input type="checkbox" value="${contact.contactID}" class="chk" name="check" />
 		</div>
+		
 		<div class="col-md-8">
-			<div class="col-md-2">
+			<!-- <div class="col-md-2">
 			<c:choose>
 				<c:when test="${empty contact.thumbnail}">
 					<img alt="" src="../resources/image/user_thumbnail.jpg">
@@ -78,21 +82,21 @@
 					</span>
 				</c:otherwise>
 			</c:choose>
-			</div>
+			</div> -->
 			
 			
 			<!-- Contact Name -->
-			<div class="col-md-2">
-				<a href="detail?id=${contact.contactID}">${contact.firstName}</a>
+			<div class="col-md-2 ver-align">
+				<a href="detail?id=${contact.contactID}">${contact.firstName} ${contact.lastName}</a>
 			</div>
 			
 			<!-- Email -->
-			<div class="col-md-3">
+			<div class="col-md-3 ver-align">
 				<label>${contact.email}</label>
 			</div>
 			
 			<!-- Number -->
-			<div class="col-md-4">
+			<div class="col-md-4 ver-align">
 			<c:forEach items="${contact.contactNumberSets}" var="number"
 				begin="0" end="0">
 				<label>${number['number']} ${number.contactType['description']}</label>
@@ -100,7 +104,7 @@
 			</div>
 			
 			<!-- Icon -->
-			<div class="col-md-1">
+			<div class="col-md-1 ver-align">
 				<span> ${contact.group.description} </span>
 			</div>
 		</div>

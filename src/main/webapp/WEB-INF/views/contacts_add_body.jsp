@@ -156,6 +156,7 @@
 </spr:form>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/numberValidator.js"></script>
 <script>
 	$(function(){
 		console.log("jquery inserted");
@@ -187,5 +188,7 @@
 			console.log("delete");
 			$(this).parents(".form-group").remove();
 		});
+		
+		Validator().getInstance().validate($('.text-box-size'));
 	})
 </script>

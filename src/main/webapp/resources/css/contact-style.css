@@ -16,3 +16,15 @@ html,body{
 .textbox-size{
 	width:120px;
 }
+.row-gap{
+	margin:15px 0px 0px 0px;
+}
+
+.ver-align{
+	margin: auto 0 auto 0;
+}
+.var-align-cell{
+	display: table-cell;
+	vertical-align: middle !important;
+	text-align: center;
+}

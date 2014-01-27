@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -196,7 +197,8 @@ public class ContactsController {
 		return "redirect:/contacts/all";
 	}
 	
-	@RequestMapping(value="list", method=RequestMethod.GET)
+	//no longer in use....
+	/*@RequestMapping(value="list", method=RequestMethod.GET)
 	public String listContactsBy(ModelMap map,String listby,HttpSession session){
 		System.out.println("List contacts by "+listby);
 		int id=getUserIDFromSession();
@@ -204,6 +206,25 @@ public class ContactsController {
 		
 		for(Contact c:contactService.getContactsUnder(listby, id)){
 			System.out.println("Conducting Contact List by"+listby);
+			System.out.println(c);
+			
+			for(ContactNumber num:c.getContactNumberSets()){
+				System.out.println(num.getNumber()+" "+num.getContactType().getDescription());
+			}
+		}
+		return "template/contacts_list";
+	}*/
+	
+	@RequestMapping(value="/{listBy}", method=RequestMethod.GET)
+	public String listContact(@PathVariable(value="listBy") String list,ModelMap map,RedirectAttributes ra){
+		
+		
+		System.out.println("List contacts by "+list);
+		int id=getUserIDFromSession();
+		map.addAttribute("contactList", contactService.getContactsUnder(list,id ));
+		
+		for(Contact c:contactService.getContactsUnder(list, id)){
+			System.out.println("Conducting Contact List by"+list);
 			System.out.println(c);
 			
 			for(ContactNumber num:c.getContactNumberSets()){
