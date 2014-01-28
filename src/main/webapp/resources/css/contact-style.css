@@ -28,3 +28,11 @@ html,body{
 	vertical-align: middle !important;
 	text-align: center;
 }
+.error{
+	font-size: 12px;
+	color:red;
+}
+.num-error{
+	font-size:10px;
+	color:red;
+}

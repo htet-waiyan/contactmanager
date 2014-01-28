@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.jws.HandlerChain;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -15,11 +17,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.contactmanager.model.Contact;
@@ -29,6 +37,9 @@ import com.contactmanager.model.Group;
 import com.contactmanager.model.User;
 import com.contactmanager.service.ContactService;
 import com.contactmanager.service.ProfileService;
+import com.contactmanager.util.ContactNumberValidator;
+import com.contactmanager.util.ContactValidator;
+import com.contactmanager.util.contact.InvalidContactNumberException;
 
 @Controller
 @RequestMapping(value="/contacts")
@@ -38,7 +49,18 @@ public class ContactsController {
 	private ProfileService profileService;
 	
 	@Autowired
+	private ContactValidator contactValidator;
+	
+	@Autowired
+	private ContactNumberValidator numValidator;
+	
+	@Autowired
 	private ContactService contactService;
+	
+	@InitBinder
+	private void initBinder(WebDataBinder binder){
+		binder.setValidator(contactValidator);
+	}
 	
 	@ModelAttribute("groupNames")
 	public String[] getGroupNames(){
@@ -57,7 +79,7 @@ public class ContactsController {
 		return contactList;
 	}
 	
-	private Set<ContactNumber> addNumbersFrom(Contact contact,String[] numbers,String[] types){
+	private Set<ContactNumber> addNumbersFrom(Contact contact,String[] numbers,String[] types)throws InvalidContactNumberException{
 		ContactNumber number=null;
 		ContactType type=null;
 		
@@ -65,6 +87,10 @@ public class ContactsController {
 		
 		for(int i=0;i<numbers.length;i++){
 			System.out.println(numbers[i]+" "+types[i]);
+			
+			if(!numValidator.isValidNumbers(numbers[i]))
+				throw new InvalidContactNumberException("Invalid number");
+			
 			number=new ContactNumber(numbers[i]);
 			number.setContact(contact);
 			type=new ContactType(types[i]);
@@ -121,19 +147,35 @@ public class ContactsController {
 	@RequestMapping(value="/add",method=RequestMethod.GET)
 	public String addNewContact(ModelMap map){
 		System.out.println("Forward to contact_add : ");
+		
 		map.addAttribute("contact", new Contact());
+		map.addAttribute("number-error",null);
+		
 		return "template/contact_add";
 	}
 	
 	@RequestMapping(value="/add",method=RequestMethod.POST)
-	public String saveAddingContact(@ModelAttribute("contact") Contact contact, HttpServletRequest request, HttpSession session,RedirectAttributes ra){
+	public String saveAddingContact(@ModelAttribute("contact") @Valid Contact contact,BindingResult result,HttpServletRequest request,ModelMap map,RedirectAttributes ra)throws InvalidContactNumberException{
 		System.out.println("Saving or updating contact "+contact.getContactID());
+		
+		if(result.hasErrors()){
+			System.out.println("Validating Failed");
+			return "template/contact_add";
+		}
 		
 		
 		List<Contact> contList=null;
 		int userID=getUserIDFromSession();
 		
-		contact.setContactNumberSets(addNumbersFrom(contact,request.getParameterValues("number"), request.getParameterValues("type")));
+		try{
+			contact.setContactNumberSets(addNumbersFrom(contact,request.getParameterValues("number"), request.getParameterValues("type")));
+		}
+		catch(InvalidContactNumberException ie){
+			map.addAttribute("contact", contact);
+
+			return "template/contact_add?error=numer";
+			//throw new InvalidContactNumberException("Invalid number");
+		}
 		
 		String param=request.getParameter("param").trim();
 		
@@ -240,7 +282,23 @@ public class ContactsController {
 		Contact contact=contactService.getContactDetailByID(Integer.parseInt(id.trim()));
 		
 		System.out.println(contact.getContactID());
+		
 		model.addAttribute("contact",contact);
+		model.addAttribute("number-error",null);
+		
 		return "template/contact_add";
+	}
+	
+	//handling invalid number exception and return with error message
+	@ExceptionHandler(InvalidContactNumberException.class)
+	public ModelAndView handleInvalidNumberException(@ModelAttribute("contact") Contact contact,InvalidContactNumberException ie){
+		System.out.println("Invalid Number");
+		
+		ModelAndView map=new ModelAndView("template/contact_add");
+		
+		map.addObject("contact",contact);
+		map.addObject("number-error", ie.getMessage());
+		
+		return map;
 	}
 }

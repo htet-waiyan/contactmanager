@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.contactmanager.model.*;
 import com.contactmanager.service.ContactService;
 import com.contactmanager.service.ProfileService;
-import com.contactmanager.util.ContactValidator;
+import com.contactmanager.util.UserValidator;
 
 @Controller
 @RequestMapping(value="/register")
@@ -30,7 +30,7 @@ import com.contactmanager.util.ContactValidator;
 public class RegisterController {
 	
 	@Autowired
-	private ContactValidator contactValidator;
+	private UserValidator contactValidator;
 	
 	@Autowired
 	private ProfileService profileService;

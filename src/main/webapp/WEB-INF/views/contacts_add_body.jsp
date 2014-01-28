@@ -23,6 +23,7 @@
 					<div class="form-group">
 						<label class="control-label col-md-4">First Name</label>
 						<div class="col-md-8">
+							<spr:errors path="firstName" class="error"></spr:errors>
 							<spr:input path="firstName" class="form-control" placeholder="first name"/>
 						</div>
 					</div>
@@ -33,6 +34,7 @@
 					<div class="form-group">
 						<label class="control-label col-md-4">Last Name</label>
 						<div class="col-md-8">
+							<spr:errors path="lastName" class="error"></spr:errors>
 							<spr:input path="lastName" class="form-control" placeholder="last name"/>
 						</div>
 					</div>
@@ -55,6 +57,7 @@
 					<div class="form-group">
 						<label class="control-label col-md-4">Email</label>
 						<div class="col-md-8">
+							<spr:errors path="email" class="error"></spr:errors>
 							<spr:input class="form-control" path="email" placeholder="email"/>
 						</div>
 					</div>
@@ -68,13 +71,17 @@
 							</div>
 					</div>
 					
+					
 					<c:forEach items="${contact.contactNumberSets}" var="number">
 					<div class="form-group">	
 							<div class="col-md-4 delDiv">
 								<a href="#" class="glyphicon glyphicon-remove-circle del pull-right"></a>
 							</div>
 							<div class="col-md-4" id="numToInsert">
-								<input value="${number.number}" class="form-control text-box-size" name="number" placeholder="phone number"/>
+								<c:if test="${param.error eq 'numer'}">
+									<span class="num-error">Invalid number</span>
+								</c:if>
+								<input value="${number.number}" class="form-control txtNumber text-box-size" name="number" placeholder="phone number"/>
 							</div>
 							<div class="col-md-4" id="typeToInsert">
 								<select name="type" id="numberType" class="form-control">
@@ -167,7 +174,7 @@
 			$newDelDiv=$('<div>').addClass("col-md-4 delDiv");
 			$newTypeDiv=$('<div>').addClass("col-md-4");
 			
-			$newNumberInput=$('<input>').attr('type','text').attr('name','number').attr('placeholder','phone number').addClass("form-control").addClass("text-box-size");
+			$newNumberInput=$('<input>').attr('type','text').attr('name','number').attr('placeholder','phone number').addClass("form-control").addClass("text-box-size txtNumber");
 			$newTypeSelect=$('<select>').attr("name","type").addClass("form-control");
 			$newDel=$("<a>").addClass("glyphicon glyphicon-remove-circle del").addClass("pull-right").attr("href","#");
 			
@@ -189,6 +196,6 @@
 			$(this).parents(".form-group").remove();
 		});
 		
-		Validator().getInstance().validate($('.text-box-size'));
+		Validator.validateNumbers('.txtNumber');
 	})
 </script>

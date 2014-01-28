@@ -47,11 +47,9 @@ public class Contact implements Serializable{
 	private int contactID;
 	
 	@Column(name="firstName")
-	@Size(min=2, max=10)
 	private String firstName;
 	
 	@Column(name="lastName")
-	@Size(min=2,max=10)
 	private String lastName;
 	
 	@Column(name="email")
