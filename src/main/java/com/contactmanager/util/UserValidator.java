@@ -32,7 +32,7 @@ public class UserValidator implements Validator {
 			ValidationUtils.rejectIfEmpty(error, "firstName", "NotEmpty");
 		}
 		else{
-			if(firstName.length()<2 || firstName.length()>10)
+			if(firstName.length()<2 || firstName.length()>50)
 				error.rejectValue("firstName", "Size.firstName");
 		}
 		
@@ -41,7 +41,7 @@ public class UserValidator implements Validator {
 			ValidationUtils.rejectIfEmptyOrWhitespace(error, "lastName", "NotEmpty");
 		}
 		else{
-			if(lastName.length()<2 || lastName.length()>10)
+			if(lastName.length()<2 || lastName.length()>50)
 				error.rejectValue("lastName", "Size.firstName");
 		}
 		

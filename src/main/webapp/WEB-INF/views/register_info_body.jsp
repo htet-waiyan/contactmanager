@@ -4,6 +4,9 @@
 		<spr:form action="register" method="post" modelAttribute="user">
 			<h4>Register : Personal Info</h4>
 			<div class="form-group">
+				<span class="error">${emailError}</span>
+			</div>
+			<div class="form-group">
 				<label>First Name</label><br/>
 				<spr:errors path="firstName" cssClass="error"></spr:errors>
 				<spr:input name="firstName" id="fname" path="firstName" cssClass="form-control"/>

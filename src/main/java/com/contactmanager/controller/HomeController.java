@@ -40,7 +40,8 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	
+
+	//checking whether the current user is already authenticated or not
 	private boolean isAuthenticated(){
 		Authentication auth= SecurityContextHolder.getContext().getAuthentication();
 		
@@ -63,11 +64,6 @@ public class HomeController {
 		
 		else
 			return "template/home";
-	}
-	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String testForSecurity(){
-		return "test";
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)

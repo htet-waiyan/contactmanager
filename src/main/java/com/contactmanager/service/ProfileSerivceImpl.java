@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +16,7 @@ import com.contactmanager.model.Contact;
 import com.contactmanager.model.ContactNumber;
 import com.contactmanager.model.User;
 import com.contactmanager.util.ContactFirstNameComparator;
+import com.contactmanager.util.register.EmailAlreadyExistedException;
 
 @Service
 public class ProfileSerivceImpl implements ProfileService {
@@ -28,9 +30,14 @@ public class ProfileSerivceImpl implements ProfileService {
 
 	@Override
 	@Transactional
-	public void addUser(User user) {
+	public void addUser(User user)throws EmailAlreadyExistedException {
 		// TODO Auto-generated method stub
-		profileDAO.saveUser(user);
+		try{
+			profileDAO.saveUser(user);
+		}
+		catch(ConstraintViolationException ce){
+			throw new EmailAlreadyExistedException("This email is already registered");
+		}
 	}
 	
 	@Transactional
