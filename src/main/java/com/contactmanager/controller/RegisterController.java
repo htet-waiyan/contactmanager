@@ -59,7 +59,14 @@ public class RegisterController {
 		}
 		System.out.println("Validation succeed");
 		System.out.println(user);
-		return "template/register_contact";
+		
+		Role role=new Role();
+		role.setRoleName("ROLE_USER");
+		
+		user.setRole(role);
+		profileService.addUser(user);
+		
+		return "/";
 	}
 	
 	@RequestMapping(value="/contacts", method=RequestMethod.POST)
@@ -68,6 +75,9 @@ public class RegisterController {
 			String addrArea,HttpSession session,RedirectAttributes ra){
 		
 		Profile profile=new Profile();
+		Role role=new Role();
+		role.setRoleName("ROLE_USER");
+		
 		User user=(User)session.getAttribute("user");
 		System.out.println("Validation succeed");
 		System.out.println(txtNumber+"-"+ddlTypes+"-"+txtFB+"-"+txtTwitter+"-"+txtWeb+"-"+addrArea);
@@ -77,6 +87,7 @@ public class RegisterController {
 		
 		profile=bindPhoneNumberToContact(profile, txtNumber, ddlTypes);
 		user.setUserProfile(profile);
+		user.setRole(role);
 		System.out.println(user);
 		System.out.println(profile);
 		

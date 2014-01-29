@@ -14,6 +14,7 @@ import com.contactmanager.model.Contact;
 import com.contactmanager.model.ContactNumber;
 import com.contactmanager.model.ContactType;
 import com.contactmanager.model.Group;
+import com.contactmanager.model.Role;
 import com.contactmanager.model.User;
 
 @Repository
@@ -30,11 +31,15 @@ public class ProfileDAOImpl implements ProfileDAO {
 		// TODO Auto-generated method stub
 		Session session=sessionFactory.getCurrentSession();
 		
-		for(ContactNumber cont : user.getUserProfile().getContactNumList()){
-			System.out.println("No : "+cont.getNumber());
-			System.out.println("Type : "+cont.getContactType().getDescription());
+		Query query=session.getNamedQuery("Role.GetRole");
+		query.setParameter("name", "ROLE_USER");
+		
+		if(query.list().size()>0){
+			Role role=(Role)query.list().get(0);
+			user.getRole().setRoleID(role.getRoleID());
 		}
-		session.save(user);
+			
+		session.merge(user);
 	}
 	
 	public User addContact(Contact contact,Integer id){

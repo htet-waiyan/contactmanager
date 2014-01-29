@@ -113,10 +113,13 @@ public class ContactDAOImpl implements ContactDAO {
 		// TODO Auto-generated method stub
 		Session session=sessionFactory.getCurrentSession();
 		
+		
 		Query query=session.getNamedQuery("Contact.DeleteAllNumbers");
 		query.setParameter("id", contact.getContactID());
 		
 		query.executeUpdate();
+		
+		session.flush();
 		
 		System.out.println(session.contains(contact));
 		
@@ -128,10 +131,10 @@ public class ContactDAOImpl implements ContactDAO {
 		//if the group is already existed. then re-assign the group id
 		if(query.list().size()>0){
 			Group group=(Group)query.list().get(0);
-			contact.setGroup(group);
+			contact.getGroup().setGroupId(group.getGroupId());
 		}
 		
-		/*for(ContactNumber number:contact.getContactNumberSets()){
+		for(ContactNumber number:contact.getContactNumberSets()){
 			query=session.getNamedQuery("ContactType.GetExistingType");
 			query.setParameter("desc", number.getContactType().getDescription());
 			
@@ -140,10 +143,11 @@ public class ContactDAOImpl implements ContactDAO {
 			
 			if(query.list().size()>0){
 				ContactType type=(ContactType) query.list().get(0);
-				number.setContactType(type);
+				number.getContactType().setSerial(type.getSerial());
 			}
-		}*/
-		session.saveOrUpdate(contact);
+			//
+		}
+		session.merge(contact);
 		
 		User user=(User) session.get(User.class, userID);
 		Hibernate.initialize(user.getContactList());

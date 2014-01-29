@@ -89,7 +89,7 @@
 			
 			<!-- Contact Name -->
 			<div class="col-md-2 ver-align">
-				<a href="detail?id=${contact.contactID}">${contact.firstName} ${contact.lastName}</a>
+				<a href="detail?id=${contact.contactID}&param=edit">${contact.firstName} ${contact.lastName}</a>
 			</div>
 			
 			<!-- Email -->

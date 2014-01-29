@@ -49,6 +49,9 @@
 			</div>
 			
 			<div class="form-group pull-right">
+				<a href="register" class="btn btn-primary btn-large">Back</a>
+			</div>
+			<div class="form-group">
 				<button id="btnSave" class="btn btn-primary btn-large">Save</button>
 			</div>
 		</div>

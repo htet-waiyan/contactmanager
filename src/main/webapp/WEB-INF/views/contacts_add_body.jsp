@@ -1,16 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" isELIgnored="false"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="spr" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <spr:form action="add" class="form-horizontal" modelAttribute="contact">
-	<c:choose>
+	<!--<c:choose>
 		<c:when test="${empty contact.firstName}">
 			<input type="hidden" value="add" name="param"/>
 		</c:when>
 		<c:otherwise>
 			<input type="hidden" value="edit" name="param"/>
 		</c:otherwise>
-	</c:choose>
+	</c:choose>-->
+	
+	<input type="hidden" value="${trigger}" name="param"/>
 	
 	<div style="margin-top:60px;"></div>
 	<div class="row">
@@ -71,16 +73,15 @@
 							</div>
 					</div>
 					
-					
+					<div class="form-group">
+						<span class="num-error">${numError}</span>
+					</div>
 					<c:forEach items="${contact.contactNumberSets}" var="number">
 					<div class="form-group">	
 							<div class="col-md-4 delDiv">
 								<a href="#" class="glyphicon glyphicon-remove-circle del pull-right"></a>
 							</div>
-							<div class="col-md-4" id="numToInsert">
-								<c:if test="${param.error eq 'numer'}">
-									<span class="num-error">Invalid number</span>
-								</c:if>
+							<div class="col-md-4" id="numToInsert">				
 								<input value="${number.number}" class="form-control txtNumber text-box-size" name="number" placeholder="phone number"/>
 							</div>
 							<div class="col-md-4" id="typeToInsert">

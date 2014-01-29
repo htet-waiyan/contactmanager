@@ -1,5 +1,6 @@
 package com.contactmanager.util;
 
+
 import org.springframework.stereotype.Component;
 
 import com.contactmanager.util.contact.InvalidContactNumberException;

@@ -11,12 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="Role")
+@NamedQueries({
+	@NamedQuery(name="Role.GetRole",query="FROM Role r WHERE r.roleName=:name")
+})
 public class Role {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

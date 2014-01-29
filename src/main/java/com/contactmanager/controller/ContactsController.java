@@ -88,8 +88,7 @@ public class ContactsController {
 		for(int i=0;i<numbers.length;i++){
 			System.out.println(numbers[i]+" "+types[i]);
 			
-			if(!numValidator.isValidNumbers(numbers[i]))
-				throw new InvalidContactNumberException("Invalid number");
+			
 			
 			number=new ContactNumber(numbers[i]);
 			number.setContact(contact);
@@ -99,6 +98,9 @@ public class ContactsController {
 			
 			numberSet.add(number);
 			System.out.println(number);
+			
+			if(!numValidator.isValidNumbers(numbers[i]))
+				throw new InvalidContactNumberException("Invalid number");
 		}
 		
 		return numberSet;
@@ -145,11 +147,12 @@ public class ContactsController {
 	}
 	
 	@RequestMapping(value="/add",method=RequestMethod.GET)
-	public String addNewContact(ModelMap map){
+	public String addNewContact(ModelMap map,HttpServletRequest request){
 		System.out.println("Forward to contact_add : ");
 		
+		//String param=request.getParameter("param").trim();
 		map.addAttribute("contact", new Contact());
-		map.addAttribute("number-error",null);
+		map.addAttribute("trigger","add");
 		
 		return "template/contact_add";
 	}
@@ -163,6 +166,10 @@ public class ContactsController {
 			return "template/contact_add";
 		}
 		
+		String param=request.getParameter("param").trim();
+		
+		System.out.println("Action Param : "+param);
+		
 		
 		List<Contact> contList=null;
 		int userID=getUserIDFromSession();
@@ -172,14 +179,11 @@ public class ContactsController {
 		}
 		catch(InvalidContactNumberException ie){
 			map.addAttribute("contact", contact);
-
-			return "template/contact_add?error=numer";
-			//throw new InvalidContactNumberException("Invalid number");
+		
+			System.out.println("Invalid Numbers");
+			//return "template/contact_add";
+			throw new InvalidContactNumberException("Invalid number! Numbers cannot contain characters and cannot be either shorter than 2 or longer than 10.");
 		}
-		
-		String param=request.getParameter("param").trim();
-		
-		System.out.println("Action Param : "+param);
 		
 		//if adding new contacts
 		if(param.equals("add")){
@@ -200,6 +204,7 @@ public class ContactsController {
 				System.out.println(num);
 			}
 		}
+		map.addAttribute("contact", contact);
 		return "redirect:/contacts/all";
 	}
 	
@@ -277,27 +282,30 @@ public class ContactsController {
 	}
 	
 	@RequestMapping(value="/detail", method=RequestMethod.GET)
-	public String viewContactDetail(String id,Model model){
-		System.out.println("Viewing Contact Details : "+id);
+	public String viewContactDetail(String id,Model model,String param){
+		System.out.println("Viewing Contact Details : "+id+" "+param);
 		Contact contact=contactService.getContactDetailByID(Integer.parseInt(id.trim()));
 		
 		System.out.println(contact.getContactID());
 		
+		model.addAttribute("trigger","edit");
 		model.addAttribute("contact",contact);
-		model.addAttribute("number-error",null);
+		//model.addAttribute("number-error","");
 		
 		return "template/contact_add";
 	}
 	
 	//handling invalid number exception and return with error message
 	@ExceptionHandler(InvalidContactNumberException.class)
-	public ModelAndView handleInvalidNumberException(@ModelAttribute("contact") Contact contact,InvalidContactNumberException ie){
+	public ModelAndView handleInvalidNumberException(HttpSession session,HttpServletRequest request,InvalidContactNumberException ie){
 		System.out.println("Invalid Number");
 		
 		ModelAndView map=new ModelAndView("template/contact_add");
-		
-		map.addObject("contact",contact);
-		map.addObject("number-error", ie.getMessage());
+		//System.out.println(session.getAttribute("contactType"));
+		map.addObject("contact",session.getAttribute("contact"));
+		map.addObject("contactType",ContactType.getTypes());
+		map.addObject("groupNames",Group.getGroupnames());
+		map.addObject("numError", ie.getMessage());
 		
 		return map;
 	}
