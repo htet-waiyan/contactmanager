@@ -47,4 +47,13 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	<session-config>
+		<session-timeout>-1</session-timeout>
+	</session-config>
+	
+	<error-page>
+        <exception-type>org.springframework.web.HttpSessionRequiredException</exception-type>
+        <location>/</location>
+    </error-page>
 </web-app>

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.contactmanager.dao.ContactDAO;
 import com.contactmanager.model.Contact;
 import com.contactmanager.model.ContactNumber;
+import com.contactmanager.model.ContactType;
 import com.contactmanager.model.User;
 import com.contactmanager.util.ContactFirstNameComparator;
 
@@ -19,19 +20,15 @@ public class ContactServiceImpl implements ContactService {
 
 	@Autowired
 	private ContactDAO contactDAO;
-	
-	@Override
-	@Transactional
-	public void addContact(Contact contact) {
-		// TODO Auto-generated method stub
-		contactDAO.addContact(contact);
-	}
 
 	@Override
 	@Transactional
 	public List<Contact> getAllContactsOf(Integer id) {
 		// TODO Auto-generated method stub
-		return null;
+		List<Contact> contList=contactDAO.getAllContacts(id);
+		Collections.sort(contList, new ContactFirstNameComparator());
+
+		return contList;
 	}
 
 	@Override
@@ -76,6 +73,21 @@ public class ContactServiceImpl implements ContactService {
 		User user=contactDAO.editContact(contact, userID);
 		
 		return user.getContactList();
+	}
+
+	@Override
+	@Transactional
+	public List<Contact> addContactsTo(Contact contact, Integer id) {
+		// TODO Auto-generated method stub
+		User user=contactDAO.addContact(contact, id);
+		return user.getContactList();
+	}
+
+	@Override
+	@Transactional
+	public ContactType getContactType(String desc) {
+		// TODO Auto-generated method stub
+		return contactDAO.getContactType(desc);
 	}
 
 	

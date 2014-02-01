@@ -227,12 +227,13 @@ public class Contact implements Serializable{
 		this.isDeleted = isDeleted;
 	}
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		result = prime * result + contactID;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((facebook == null) ? 0 : facebook.hashCode());
@@ -240,6 +241,7 @@ public class Contact implements Serializable{
 				+ ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((note == null) ? 0 : note.hashCode());
 		result = prime * result
 				+ ((thumbnail == null) ? 0 : thumbnail.hashCode());
 		result = prime * result + ((twitter == null) ? 0 : twitter.hashCode());
@@ -261,8 +263,6 @@ public class Contact implements Serializable{
 				return false;
 		} else if (!address.equals(other.address))
 			return false;
-		if (contactID != other.contactID)
-			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -282,6 +282,11 @@ public class Contact implements Serializable{
 			if (other.lastName != null)
 				return false;
 		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (note == null) {
+			if (other.note != null)
+				return false;
+		} else if (!note.equals(other.note))
 			return false;
 		if (thumbnail == null) {
 			if (other.thumbnail != null)

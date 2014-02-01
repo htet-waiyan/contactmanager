@@ -39,30 +39,6 @@ public class ProfileSerivceImpl implements ProfileService {
 			throw new EmailAlreadyExistedException("This email is already registered");
 		}
 	}
-	
-	@Transactional
-	public List<Contact> getAllContactsOf(Integer id) {
-		// TODO Auto-generated method stub
-		List<Contact> contList=profileDAO.getAllContacts(id);
-		Collections.sort(contList, new ContactFirstNameComparator());
-
-		return contList;
-	}
-
-	@Transactional
-	@Override
-	public List<Contact> addContactsTo(Contact contact, Integer id) {
-		// TODO Auto-generated method stub
-		User user=profileDAO.addContact(contact, id);
-		return user.getContactList();
-	}
-
-	@Override
-	@Transactional
-	public List<Contact> updateContact(Contact contact, Integer id) {
-		// TODO Auto-generated method stub
-		return profileDAO.editContact(contact, id).getContactList();
-	}
 
 	@Override
 	@Transactional

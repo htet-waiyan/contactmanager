@@ -5,11 +5,11 @@ import java.util.Set;
 
 import com.contactmanager.model.Contact;
 import com.contactmanager.model.ContactNumber;
+import com.contactmanager.model.ContactType;
 import com.contactmanager.model.User;
 
 public interface ContactDAO {
-	//to add contact info during registration/edition
-	public void addContact(Contact contact);
+	public User addContact(Contact contact,Integer id);
 	
 	public void deleteContacts(String[] contactIDs);
 	
@@ -26,4 +26,6 @@ public interface ContactDAO {
 	public void moveContactsTo(String[] contIDs,String moveTo);
 	
 	public User editContact(Contact contact,Integer userID);
+	
+	public ContactType getContactType(String desc);
 }

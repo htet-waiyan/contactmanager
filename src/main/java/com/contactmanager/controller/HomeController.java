@@ -66,38 +66,6 @@ public class HomeController {
 			return "template/home";
 	}
 	
-	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String login(@RequestParam String txtEmail,@RequestParam String txtPasswd,HttpSession session)
-	throws LoginFailedException,NonRegisterEmailException, PasswordInvalidException{
-		System.out.println("Email : "+txtEmail);
-		System.out.println("Password : "+txtPasswd);
-		
-		int id=0;
-		//varifying login credentials......
-		try{
-			id=loginValidator.varifyCredentials(txtEmail, txtPasswd);
-			
-			System.out.println("Validation passed : "+id);
-			session.setAttribute("userID", id);
-		}
-		catch(NonRegisterEmailException nre){
-			System.out.println(nre.getErrorMsg());
-			throw new NonRegisterEmailException(10001, "Email is not registered");
-		}
-		catch(PasswordInvalidException pie){
-			System.out.println(pie.getErrorMsg());
-			throw new PasswordInvalidException(10002, "Password is invalid");
-		}
-		catch(LoginFailedException le){
-			System.out.println(le.getErrorMsg());
-			throw new LoginFailedException(0000,"Login Failed");
-		}
-		
-		//successful! redirect to dashboard
-		session.setAttribute("userID", id);
-		return "redirect:/contacts/all";
-	}
-	
 	@ExceptionHandler(NonRegisterEmailException.class)
 	public ModelAndView handleNonRegisteredEmailException(NonRegisterEmailException ne){
 		System.out.println("In handling method : "+ne.getErrorMsg());

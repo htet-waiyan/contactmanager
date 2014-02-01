@@ -36,7 +36,6 @@ import com.contactmanager.model.ContactType;
 import com.contactmanager.model.Group;
 import com.contactmanager.model.User;
 import com.contactmanager.service.ContactService;
-import com.contactmanager.service.ProfileService;
 import com.contactmanager.util.ContactNumberValidator;
 import com.contactmanager.util.ContactValidator;
 import com.contactmanager.util.contact.InvalidContactNumberException;
@@ -45,8 +44,6 @@ import com.contactmanager.util.contact.InvalidContactNumberException;
 @RequestMapping(value="/contacts")
 @SessionAttributes(value="contact")
 public class ContactsController {
-	@Autowired
-	private ProfileService profileService;
 	
 	@Autowired
 	private ContactValidator contactValidator;
@@ -71,10 +68,13 @@ public class ContactsController {
 	public String[] getContactTypes(){
 		return ContactType.getTypes();
 	}
+	
+	//retrieving all contacts of a particular user
+	//for showing on the first page after login
 	private List<Contact> retrieveAllContacts(Integer userID){
 		System.out.println("User ID :"+userID);
 		
-		List<Contact> contactList= profileService.getAllContactsOf(userID);
+		List<Contact> contactList= contactService.getAllContactsOf(userID);
 		
 		return contactList;
 	}
@@ -92,9 +92,8 @@ public class ContactsController {
 			
 			number=new ContactNumber(numbers[i]);
 			number.setContact(contact);
-			type=new ContactType(types[i]);
 			
-			number.setContactType(type);
+			number.setContactType(contactService.getContactType(types[i]));
 			
 			numberSet.add(number);
 			System.out.println(number);
@@ -105,33 +104,7 @@ public class ContactsController {
 		
 		return numberSet;
 	}
-	
-	private void editNumbersFrom(Contact contact,String[] numbers,String[] types){
-		
-		int count=0;
-		for(ContactNumber ctNum:contact.getContactNumberSets()){
-			System.out.println(ctNum.getKey());
-			ctNum.setNumber(numbers[count]);
-			ctNum.getContactType().setDescription(types[count]);
-			
-			count++;
-		}
-		
-		if(numbers.length>count){
-			ContactNumber ctNum=null;
-			ContactType type=null;
-			
-			for(int i=count;i<numbers.length;i++){
-				ctNum=new ContactNumber(numbers[i]);
-				type=new ContactType(types[i]);
-				
-				ctNum.setContactType(type);
-				ctNum.setContact(contact);
-				contact.getContactNumberSets().add(ctNum);
-			}
-		}
-		
-	}
+
 	
 	private Integer getUserIDFromSession(){
 		Integer userID=(Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -139,6 +112,8 @@ public class ContactsController {
 		return userID;
 	}
 	
+	//the first page after login
+	//listing all contacts
 	@RequestMapping(value="/all",method=RequestMethod.GET)
 	public String listContacts(ModelMap map,HttpSession session){
 		System.out.println("Handling /all");
@@ -146,68 +121,66 @@ public class ContactsController {
 		return "template/contacts_list";
 	}
 	
+	//navigating to the contact add page.
 	@RequestMapping(value="/add",method=RequestMethod.GET)
 	public String addNewContact(ModelMap map,HttpServletRequest request){
 		System.out.println("Forward to contact_add : ");
 		
-		//String param=request.getParameter("param").trim();
+		//loading the form with empty contact entity
 		map.addAttribute("contact", new Contact());
+		//commanding that the upcoming action is adding contact.
 		map.addAttribute("trigger","add");
 		
 		return "template/contact_add";
 	}
 	
+	//processing contacts addition.
 	@RequestMapping(value="/add",method=RequestMethod.POST)
 	public String saveAddingContact(@ModelAttribute("contact") @Valid Contact contact,BindingResult result,HttpServletRequest request,ModelMap map,RedirectAttributes ra)throws InvalidContactNumberException{
 		System.out.println("Saving or updating contact "+contact.getContactID());
 		
+		//if validation failed,
 		if(result.hasErrors()){
 			System.out.println("Validating Failed");
 			return "template/contact_add";
 		}
 		
+		//getting the param : add or edit 
+		//to determine if the action is adding or editing contacts.
 		String param=request.getParameter("param").trim();
-		
-		System.out.println("Action Param : "+param);
-		
 		
 		List<Contact> contList=null;
 		int userID=getUserIDFromSession();
 		
 		try{
-			contact.setContactNumberSets(addNumbersFrom(contact,request.getParameterValues("number"), request.getParameterValues("type")));
+			//preparing contact object graphs.
+			contact.setContactNumberSets(null);
+			
+			if(request.getParameterValues("number")!=null)
+				contact.setContactNumberSets(addNumbersFrom(contact,request.getParameterValues("number"), request.getParameterValues("type")));
 		}
 		catch(InvalidContactNumberException ie){
 			map.addAttribute("contact", contact);
 		
 			System.out.println("Invalid Numbers");
-			//return "template/contact_add";
 			throw new InvalidContactNumberException("Invalid number! Numbers cannot contain characters and cannot be either shorter than 2 or longer than 10.");
 		}
 		
-		//if adding new contacts
+		//if adding new contact
 		if(param.equals("add")){
-			contList=profileService.addContactsTo(contact, userID);
+			contList=contactService.addContactsTo(contact, userID);
 		}
 		
 		//if editing existing contacts
 		else{
 			contList=contactService.editContact(contact, userID);
 		}
-		
-		for(Contact c : contList){
-			Set<ContactNumber> nset=c.getContactNumberSets();
-			Iterator<ContactNumber> cn=nset.iterator();
-			
-			while(cn.hasNext()){
-				ContactNumber num=cn.next();
-				System.out.println(num);
-			}
-		}
+	
 		map.addAttribute("contact", contact);
 		return "redirect:/contacts/all";
 	}
 	
+	//processing searching contacts....
 	@RequestMapping(value="/search", method=RequestMethod.GET)
 	public String searchContact(String txtSearch, ModelMap map,HttpSession session){
 		int id=getUserIDFromSession();
@@ -225,6 +198,7 @@ public class ContactsController {
 		return "template/contacts_list";
 	}
 	
+	//processing for deleting or moving contacts.
 	@RequestMapping(value="/action", method=RequestMethod.POST)
 	public String deleteContacts(HttpServletRequest request,HttpSession session,String actionHidden,String toGroup,RedirectAttributes ra){
 		String[] ids=request.getParameterValues("check");
@@ -244,24 +218,7 @@ public class ContactsController {
 		return "redirect:/contacts/all";
 	}
 	
-	//no longer in use....
-	/*@RequestMapping(value="list", method=RequestMethod.GET)
-	public String listContactsBy(ModelMap map,String listby,HttpSession session){
-		System.out.println("List contacts by "+listby);
-		int id=getUserIDFromSession();
-		map.addAttribute("contactList", contactService.getContactsUnder(listby,id ));
-		
-		for(Contact c:contactService.getContactsUnder(listby, id)){
-			System.out.println("Conducting Contact List by"+listby);
-			System.out.println(c);
-			
-			for(ContactNumber num:c.getContactNumberSets()){
-				System.out.println(num.getNumber()+" "+num.getContactType().getDescription());
-			}
-		}
-		return "template/contacts_list";
-	}*/
-	
+	//processing for listing contacts by group name
 	@RequestMapping(value="/{listBy}", method=RequestMethod.GET)
 	public String listContact(@PathVariable(value="listBy") String list,ModelMap map,RedirectAttributes ra){
 		
@@ -269,18 +226,11 @@ public class ContactsController {
 		System.out.println("List contacts by "+list);
 		int id=getUserIDFromSession();
 		map.addAttribute("contactList", contactService.getContactsUnder(list,id ));
-		
-		for(Contact c:contactService.getContactsUnder(list, id)){
-			System.out.println("Conducting Contact List by"+list);
-			System.out.println(c);
-			
-			for(ContactNumber num:c.getContactNumberSets()){
-				System.out.println(num.getNumber()+" "+num.getContactType().getDescription());
-			}
-		}
+	
 		return "template/contacts_list";
 	}
 	
+	//nevigation to detail view of a contact.
 	@RequestMapping(value="/detail", method=RequestMethod.GET)
 	public String viewContactDetail(String id,Model model,String param){
 		System.out.println("Viewing Contact Details : "+id+" "+param);

@@ -23,17 +23,49 @@ public class ContactDAOImpl implements ContactDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
 	@Override
-	public void addContact(Contact contact) {
-		// TODO Auto-generated method stub
+	public User addContact(Contact contact,Integer id){
 		Session session=sessionFactory.getCurrentSession();
-		session.save(contact);
+		User user=(User)session.get(User.class, id);
+		Query groupQuery=session.getNamedQuery("Group.GetExistingGroupName");
+		groupQuery.setParameter("desc", contact.getGroup().getDescription().trim());
+		
+		if(groupQuery.list().size()>0){
+			contact.setGroup((Group)groupQuery.list().get(0));
+		}
+		
+		Query typeQuery=session.getNamedQuery("ContactType.GetExistingType");
+		
+		for(ContactNumber contNum:contact.getContactNumberSets()){
+			typeQuery.setParameter("desc", contNum.getContactType().getDescription().trim());
+			
+			if(typeQuery.list().size()>0){
+				contNum.setContactType((ContactType)typeQuery.list().get(0));
+			}
+		}
+		
+		user.getContactList().add(contact);
+		
+		System.out.println("before inserting....");
+		for(ContactNumber c:user.getContactList().get(0).getContactNumberSets()){
+			System.out.println(c);
+		}
+		session.update(user);
+		return user;
 	}
 
 	@Override
 	public List<Contact> getAllContacts(Integer id) {
 		// TODO Auto-generated method stub
-		return null;
+		Session session=sessionFactory.getCurrentSession();
+		Query query=session.getNamedQuery("User.RetrieveContacts");
+		query.setParameter("userID", id);
+		query.setParameter("deleted", false);
+		
+		System.out.println("Retrieving Contacts....");
+		List<Contact> contactList=query.list();
+		return contactList;
 	}
 
 	@Override
@@ -83,7 +115,6 @@ public class ContactDAOImpl implements ContactDAO {
 		Session session=sessionFactory.getCurrentSession();
 		
 		Contact contact=(Contact)session.get(Contact.class, id);
-		session.flush();
 		return contact;
 	}
 
@@ -107,6 +138,20 @@ public class ContactDAOImpl implements ContactDAO {
 			session.saveOrUpdate(cont);
 		}
 	}
+	
+	@Override
+	public ContactType getContactType(String desc){
+		Session session=sessionFactory.getCurrentSession();
+		Query query=session.getNamedQuery("ContactType.GetExistingType");
+		query.setParameter("desc", desc);
+		
+		List list=query.list();
+		
+		if(list.size()>0)
+			return (ContactType) list.get(0);
+		else
+			return new ContactType(desc);
+	}
 
 	@Override
 	public User editContact(Contact contact,Integer userID) {
@@ -119,35 +164,28 @@ public class ContactDAOImpl implements ContactDAO {
 		
 		query.executeUpdate();
 		
-		session.flush();
-		
-		System.out.println(session.contains(contact));
-		
 		System.out.println("Resetting Numbers");
 		
 		query=session.getNamedQuery("Group.GetExistingGroupName");
 		query.setParameter("desc", contact.getGroup().getDescription());
 		
 		//if the group is already existed. then re-assign the group id
+		System.out.println("Group Info : "+contact.getGroup().getGroupId()+" "+contact.getGroup().getDescription());
 		if(query.list().size()>0){
 			Group group=(Group)query.list().get(0);
-			contact.getGroup().setGroupId(group.getGroupId());
+			System.out.println("Resetting group : "+group.getGroupId()+" "+group.getDescription());
+			System.out.println("The same group? : "+group.equals(contact.getGroup()));
+			
+			if(contact.getGroup().getGroupId()!=group.getGroupId())
+				contact.setGroup(group);
+		}
+		else{
+			//inserting a new row....
+			contact.getGroup().setGroupId(null);
 		}
 		
-		for(ContactNumber number:contact.getContactNumberSets()){
-			query=session.getNamedQuery("ContactType.GetExistingType");
-			query.setParameter("desc", number.getContactType().getDescription());
-			
-			//if the type is already existed. then re-assign the type id
-			System.out.println("Editing Numbers : "+number.getKey()+" "+number.getNumber());
-			
-			if(query.list().size()>0){
-				ContactType type=(ContactType) query.list().get(0);
-				number.getContactType().setSerial(type.getSerial());
-			}
-			//
-		}
-		session.merge(contact);
+		session.clear();
+		session.saveOrUpdate(contact);
 		
 		User user=(User) session.get(User.class, userID);
 		Hibernate.initialize(user.getContactList());

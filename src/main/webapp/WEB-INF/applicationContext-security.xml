@@ -12,7 +12,7 @@
 	
 	<import resource="spring/appServlet/servlet-context.xml"/>
 	
-	<security:http auto-config="false" use-expressions="true">
+	<security:http auto-config="false" use-expressions="true" create-session="ifRequired">
 		<security:intercept-url pattern="/contacts/**"  access="hasRole('ROLE_USER')" />
 		<security:form-login login-page="/" authentication-failure-url="/?login_error=1" default-target-url="/contacts/all"/>
 		<security:logout logout-success-url="/"/>

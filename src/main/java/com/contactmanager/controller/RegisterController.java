@@ -96,7 +96,7 @@ public class RegisterController {
 		System.out.println(session.getAttribute("user"));
 		
 		//re-binding the registering user
-		//and adding message that convey the error.
+		//and adding message that conveys the error.
 		mv.addObject("user", session.getAttribute("user"));
 		mv.addObject("emailError",ae.getMessage());
 		
